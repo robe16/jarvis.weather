@@ -14,7 +14,7 @@ class Weather():
 
     metoffice_session = requests.Session()
 
-    STRmetoffice_BASEurl = 'http://datapoint.metoffice.gov.uk/public/data/'
+    STRmetoffice_BASEurl = 'datapoint.metoffice.gov.uk/public/data/'
     STRmetoffice_PATHlistsite = 'val/wxfcs/all/{datatype}/sitelist'
     STRmetoffice_PATHlistregion = 'txt/wxfcs/regionalforecast/{datatype}/sitelist'
     STRmetoffice_PATHforecastsite = 'val/wxfcs/all/{datatype}/{locationId}'
