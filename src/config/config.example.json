@@ -1,0 +1,17 @@
+{
+    "service_id": "weather",
+    "name_long": "Weather",
+    "name_short": "Weather",
+    "groups": [
+        "Information"
+    ],
+    "subservices": [],
+    "details": {
+        "metoffice_key": "12345678-wxyz-abcd-1234-6b812340dgfd",
+        "town": "Leeds"
+    },
+    "port": {
+        "broadcast": 1040,
+        "listener": [1071, 1072, 1073, 1074]
+    }
+}
