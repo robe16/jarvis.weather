@@ -31,7 +31,7 @@ class Weather():
     def __init__(self):
         #
         town = get_cfg_details_town()
-        self.getLocation(town)
+        self._get_location(town)
 
     # Parameter functions
 
@@ -59,22 +59,14 @@ class Weather():
         #
         # Assumption made that where day and night have seperate units defined,
         # these will be the same, therefore taken from day definition
-        units_json = {}
-        units_json['daily'] = self._unit_json(forecast_daily['SiteRep']['Wx']['Param'])
-        units_json['3hourly'] = self._unit_json(forecast_3hourly['SiteRep']['Wx']['Param'])
+        units_json = {'daily': self._unit_json(forecast_daily['SiteRep']['Wx']['Param']),
+                      '3hourly': self._unit_json(forecast_3hourly['SiteRep']['Wx']['Param'])}
         #
-        location_json = {}
-        location_json['name'] = self.LOCATION_town
-        location_json['elevation'] = self.LOCATION_elevation
-        location_json['latitude'] = self.LOCATION_latitude
-        location_json['longitude'] = self.LOCATION_longitude
-        location_json['region'] = self.LOCATION_region
-        location_json['unitaryAuthArea'] = self.LOCATION_unitaryAuthArea
+        location_json = self.get_location()
         #
-        jsonForecast = {}
-        jsonForecast['units'] = units_json
-        jsonForecast['location'] = location_json
-        jsonForecast['days'] = {}
+        jsonForecast = {'units': units_json,
+                        'location': location_json,
+                        'days': {}}
         #
         dy_count = 0
         #
@@ -176,8 +168,18 @@ class Weather():
 
     # Locations
 
-    def getLocation(self, town):
-        locations = self.getLocations_list()
+    def get_location(self):
+        location_json = {'name': self.LOCATION_town,
+                         'elevation': self.LOCATION_elevation,
+                         'latitude': self.LOCATION_latitude,
+                         'longitude': self.LOCATION_longitude,
+                         'region': self.LOCATION_region,
+                         'unitaryAuthArea': self.LOCATION_unitaryAuthArea}
+        #
+        return location_json
+
+    def _get_location(self, town):
+        locations = self._get_locations_list()
         #
         for location in locations['Locations']['Location']:
             if location['name'] == town:
@@ -189,7 +191,7 @@ class Weather():
                 self.LOCATION_region = location['region']
                 self.LOCATION_unitaryAuthArea = location['unitaryAuthArea']
 
-    def getLocations_list(self):
+    def _get_locations_list(self):
         #
         uri = self.STRmetoffice_PATHlistsite.format(datatype='json')
         query_values = []
@@ -216,17 +218,16 @@ class Weather():
     # General scripts
 
     def _unit_json(self, data):
-        units_json = {}
-        units_json['weather_type'] = self.getParam_unit(data, 'W')
-        units_json['wind_direction'] = self.getParam_unit(data, 'D')
-        units_json['wind_speed'] = self.getParam_unit(data, 'S')
-        units_json['visibility'] = self.getParam_unit(data, 'V')
-        units_json['temp'] = self.getParam_unit_temp(data, 'Dm')
-        units_json['temp_feels'] = self.getParam_unit_temp(data, 'FDm')
-        units_json['wind_gust'] = self.getParam_unit(data, 'Gn')
-        units_json['humidity'] = self.getParam_unit(data, 'Hn')
-        units_json['precipitation_prob'] = self.getParam_unit(data, 'PPd')
-        units_json['uv_index'] = self.getParam_unit(data, 'U')
+        units_json = {'weather_type': self.getParam_unit(data, 'W'),
+                      'wind_direction': self.getParam_unit(data, 'D'),
+                      'wind_speed': self.getParam_unit(data, 'S'),
+                      'visibility': self.getParam_unit(data, 'V'),
+                      'temp': self.getParam_unit_temp(data, 'Dm'),
+                      'temp_feels': self.getParam_unit_temp(data, 'FDm'),
+                      'wind_gust': self.getParam_unit(data, 'Gn'),
+                      'humidity': self.getParam_unit(data, 'Hn'),
+                      'precipitation_prob': self.getParam_unit(data, 'PPd'),
+                      'uv_index': self.getParam_unit(data, 'U')}
         #
         return units_json
 

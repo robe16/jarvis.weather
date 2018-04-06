@@ -108,6 +108,47 @@ def start_bottle(port_threads):
             raise HTTPError(status)
 
     ################################################################################################
+    # Location
+    ################################################################################################
+
+    @get(uri_get_location)
+    def get_headlines(option):
+        #
+        args = _get_log_args(request)
+        #
+        try:
+            #
+            data = _weather.get_location()
+            #
+            if not bool(data):
+                status = httpStatusFailure
+                args['result'] = logFail
+            else:
+                status = httpStatusSuccess
+                args['result'] = logPass
+            #
+            args['http_response_code'] = status
+            args['description'] = '-'
+            log_inbound(**args)
+            #
+            if isinstance(data, bool):
+                return HTTPResponse(status=status)
+            else:
+                return HTTPResponse(body=data, status=status)
+            #
+        except Exception as e:
+            #
+            status = httpStatusServererror
+            #
+            args['result'] = logException
+            args['http_response_code'] = status
+            args['description'] = '-'
+            args['exception'] = e
+            log_inbound(**args)
+            #
+            raise HTTPError(status)
+
+    ################################################################################################
     # Forecast
     ################################################################################################
 
