@@ -64,12 +64,12 @@ class Weather():
         units_json['3hourly'] = self._unit_json(forecast_3hourly['SiteRep']['Wx']['Param'])
         #
         location_json = {}
-        location_json['name'] = LOCATION_town
-        location_json['elevation'] = LOCATION_elevation
-        location_json['latitude'] = LOCATION_latitude
-        location_json['longitude'] = LOCATION_longitude
-        location_json['region'] = LOCATION_region
-        location_json['unitaryAuthArea'] = LOCATION_unitaryAuthArea
+        location_json['name'] = self.LOCATION_town
+        location_json['elevation'] = self.LOCATION_elevation
+        location_json['latitude'] = self.LOCATION_latitude
+        location_json['longitude'] = self.LOCATION_longitude
+        location_json['region'] = self.LOCATION_region
+        location_json['unitaryAuthArea'] = self.LOCATION_unitaryAuthArea
         #
         jsonForecast = {}
         jsonForecast['units'] = units_json
@@ -181,20 +181,13 @@ class Weather():
         #
         for location in locations['Locations']['Location']:
             if location['name'] == town:
-                global LOCATION_town
-                LOCATION_town = town
-                global LOCATION_id
-                LOCATION_id = location['id']
-                global LOCATION_elevation
-                LOCATION_elevation = location['elevation']
-                global LOCATION_latitude
-                LOCATION_latitude = location['latitude']
-                global LOCATION_longitude
-                LOCATION_longitude = location['longitude']
-                global LOCATION_region
-                LOCATION_region = location['region']
-                global LOCATION_unitaryAuthArea
-                LOCATION_unitaryAuthArea = location['unitaryAuthArea']
+                self.LOCATION_town = town
+                self.LOCATION_id = location['id']
+                self.LOCATION_elevation = location['elevation']
+                self.LOCATION_latitude = location['latitude']
+                self.LOCATION_longitude = location['longitude']
+                self.LOCATION_region = location['region']
+                self.LOCATION_unitaryAuthArea = location['unitaryAuthArea']
 
     def getLocations_list(self):
         #
@@ -209,7 +202,7 @@ class Weather():
         regions = self.getRegions_list()
         #
         for region in regions:
-            if region['@name'] == LOCATION_region:
+            if region['@name'] == self.LOCATION_region:
                 global REGION_id
                 REGION_id = region['@id']
 
@@ -241,17 +234,18 @@ class Weather():
 
     def _metoffice_request(self, uri, query_values):
         #
-        query = 'key={api_key}'.format(api_key=get_cfg_details_metofficeKey())
+        url = self.STRmetoffice_BASEurl
         #
+        query = 'key={api_key}'.format(api_key=get_cfg_details_metofficeKey())
         if len(query_values):
             query += '&'
             query += '&'.join(query_values)
         #
-        url = 'http://{url}{uri}?{query}'.format(url=self.STRmetoffice_BASEurl,
-                                                 uri=uri,
-                                                 query=query)
+        request_url = 'http://{url}{uri}?{query}'.format(url=url,
+                                                         uri=uri,
+                                                         query=query)
         #
-        r = requests.get(url)
+        r = requests.get(request_url)
         #
         result = logPass if r.status_code == requests.codes.ok else logFail
         #
