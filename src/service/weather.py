@@ -179,7 +179,7 @@ class Weather():
     def getLocation(self, town):
         locations = self.getLocations_list()
         #
-        for location in locations:
+        for location in locations['Locations']['Location']:
             if location['name'] == town:
                 global LOCATION_town
                 LOCATION_town = town
