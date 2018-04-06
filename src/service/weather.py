@@ -4,7 +4,7 @@ import datetime
 from common_functions.time_functions import convertMinsToTime
 from config.config import get_cfg_details_metofficeKey
 from config.config import get_cfg_details_town
-from weather_lists import *
+from service.weather_lists import *
 from log.log import log_outbound, log_internal
 from resources.global_resources.log_vars import logPass, logFail, logException
 from resources.lang.enGB.logs import *
