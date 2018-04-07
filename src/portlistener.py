@@ -3,6 +3,7 @@ import threading
 from bottle import HTTPError
 from bottle import get
 from bottle import request, run, HTTPResponse
+import datetime
 
 from common_functions.query_to_string import convert_query_to_string
 from config.config import get_cfg_port_listener
@@ -13,6 +14,7 @@ from resources.global_resources.log_vars import logPass, logFail, logException
 from resources.global_resources.variables import *
 from resources.lang.enGB.logs import *
 from service.weather import Weather
+from service.sunrise_sunset import SunsetSunrise
 
 
 def start_bottle(port_threads):
@@ -22,6 +24,7 @@ def start_bottle(port_threads):
     ################################################################################################
 
     _weather = Weather()
+    _sunrisesunset = SunsetSunrise()
 
     log_internal(logPass, logDescDeviceObjectCreation, description='success')
 
@@ -200,45 +203,52 @@ def start_bottle(port_threads):
     # Sunrise/Sunset
     ################################################################################################
 
-    # @get(uri_get_weather_sunriseset)
-    # def get_headlines(option):
-    #     #
-    #     args = _get_log_args(request)
-    #     #
-    #     try:
-    #         #
-    #         if option == 'all':
-    #             data = False
-    #         else:
-    #             data = False
-    #         #
-    #         if not bool(data):
-    #             status = httpStatusFailure
-    #             args['result'] = logFail
-    #         else:
-    #             status = httpStatusSuccess
-    #             args['result'] = logPass
-    #         #
-    #         args['http_response_code'] = status
-    #         args['description'] = '-'
-    #         log_inbound(**args)
-    #         #
-    #         if isinstance(data, bool):
-    #             return HTTPResponse(status=status)
-    #         else:
-    #             return HTTPResponse(body=data, status=status)
-    #         #
-    #     except Exception as e:
-    #         #
-    #         status = httpStatusServererror
-    #         #
-    #         args['result'] = logException
-    #         args['http_response_code'] = status
-    #         args['description'] = '-'
-    #         args['exception'] = e
-    #         log_inbound(**args)
-    #         #
-    #         raise HTTPError(status)
+    @get(uri_get_weather_sunriseset)
+    def get_headlines(date):
+        #
+        # 'date' in YYYY-MM-DD format. Also accepts other date formats and even relative date formats.
+        # If not present, date defaults to current date. Optional.
+        #
+        args = _get_log_args(request)
+        #
+        try:
+            #
+            location = _weather.get_location()
+            lat = location['latitude']
+            long = location['longitude']
+            #
+            if date:
+                data = _sunrisesunset.get_sunrise_sunset(lat, long, date)
+            else:
+                data = False
+            #
+            if not bool(data):
+                status = httpStatusFailure
+                args['result'] = logFail
+            else:
+                status = httpStatusSuccess
+                args['result'] = logPass
+            #
+            args['http_response_code'] = status
+            args['description'] = '-'
+            log_inbound(**args)
+            #
+            if isinstance(data, bool):
+                return HTTPResponse(status=status)
+            else:
+                return HTTPResponse(body=data, status=status)
+            #
+        except Exception as e:
+            #
+            status = httpStatusServererror
+            #
+            args['result'] = logException
+            args['http_response_code'] = status
+            args['description'] = '-'
+            args['exception'] = e
+            log_inbound(**args)
+            #
+            raise HTTPError(status)
 
     ################################################################################################
 

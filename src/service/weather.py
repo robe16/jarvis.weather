@@ -12,8 +12,6 @@ from resources.lang.enGB.logs import *
 
 class Weather():
 
-    metoffice_session = requests.Session()
-
     STRmetoffice_BASEurl = 'datapoint.metoffice.gov.uk/public/data/'
     STRmetoffice_PATHlistsite = 'val/wxfcs/all/{datatype}/sitelist'
     STRmetoffice_PATHlistregion = 'txt/wxfcs/regionalforecast/{datatype}/sitelist'
@@ -35,7 +33,8 @@ class Weather():
 
     # Parameter functions
 
-    def getParam_unit(self, params, name):
+    @staticmethod
+    def getParam_unit(params, name):
         for param in params:
             if param['name'] == name:
                 return param['units']
