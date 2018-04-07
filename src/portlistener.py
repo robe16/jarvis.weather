@@ -111,11 +111,62 @@ def start_bottle(port_threads):
             raise HTTPError(status)
 
     ################################################################################################
+    # Location, Forecast and Sunrise-Sunset
+    ################################################################################################
+
+    @get(uri_get_all)
+    def get_all():
+        #
+        args = _get_log_args(request)
+        #
+        try:
+            #
+            data = _weather.get_weather_forecast()
+            #
+            if not bool(data):
+                status = httpStatusFailure
+                args['result'] = logFail
+            else:
+                status = httpStatusSuccess
+                args['result'] = logPass
+            #
+            day = 0
+            while day < len(data['days']):
+                #
+                data['days'][day]['sunRiseSet'] = _sunrisesunset.get_sunrise_sunset(data['location']['latitude'],
+                                                                                    data['location']['longitude'],
+                                                                                    data['days'][day]['date'])
+                #
+                day += 1
+                #
+            #
+            args['http_response_code'] = status
+            args['description'] = '-'
+            log_inbound(**args)
+            #
+            if isinstance(data, bool):
+                return HTTPResponse(status=status)
+            else:
+                return HTTPResponse(body=data, status=status)
+            #
+        except Exception as e:
+            #
+            status = httpStatusServererror
+            #
+            args['result'] = logException
+            args['http_response_code'] = status
+            args['description'] = '-'
+            args['exception'] = e
+            log_inbound(**args)
+            #
+            raise HTTPError(status)
+
+    ################################################################################################
     # Location
     ################################################################################################
 
     @get(uri_get_location)
-    def get_headlines(option):
+    def get_location():
         #
         args = _get_log_args(request)
         #
@@ -156,7 +207,7 @@ def start_bottle(port_threads):
     ################################################################################################
 
     @get(uri_get_weather_forecast)
-    def get_headlines(option):
+    def get_forecast(option):
         #
         args = _get_log_args(request)
         #
@@ -203,8 +254,8 @@ def start_bottle(port_threads):
     # Sunrise/Sunset
     ################################################################################################
 
-    @get(uri_get_weather_sunriseset)
-    def get_headlines(date):
+    @get(uri_get_weather_sunrisesunset)
+    def get_sunrisesunset(date):
         #
         # 'date' in YYYY-MM-DD format. Also accepts other date formats and even relative date formats.
         # If not present, date defaults to current date. Optional.
@@ -220,7 +271,7 @@ def start_bottle(port_threads):
             if date:
                 data = _sunrisesunset.get_sunrise_sunset(lat, long, date)
             else:
-                data = False
+                data = _sunrisesunset.get_sunrise_sunset(lat, long, 'today')
             #
             if not bool(data):
                 status = httpStatusFailure
