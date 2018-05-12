@@ -144,10 +144,14 @@ def start_bottle(port_threads):
             args['description'] = '-'
             log_inbound(**args)
             #
-            if isinstance(data, bool):
-                return HTTPResponse(status=status)
-            else:
-                return HTTPResponse(body=data, status=status)
+            response = HTTPResponse()
+            response.status = status
+            enable_cors(response)
+            #
+            if not isinstance(data, bool):
+                response.body = data
+            #
+            return response
             #
         except Exception as e:
             #
@@ -185,10 +189,14 @@ def start_bottle(port_threads):
             args['description'] = '-'
             log_inbound(**args)
             #
-            if isinstance(data, bool):
-                return HTTPResponse(status=status)
-            else:
-                return HTTPResponse(body=data, status=status)
+            response = HTTPResponse()
+            response.status = status
+            enable_cors(response)
+            #
+            if not isinstance(data, bool):
+                response.body = data
+            #
+            return response
             #
         except Exception as e:
             #
@@ -233,10 +241,14 @@ def start_bottle(port_threads):
             args['description'] = '-'
             log_inbound(**args)
             #
-            if isinstance(data, bool):
-                return HTTPResponse(status=status)
-            else:
-                return HTTPResponse(body=data, status=status)
+            response = HTTPResponse()
+            response.status = status
+            enable_cors(response)
+            #
+            if not isinstance(data, bool):
+                response.body = data
+            #
+            return response
             #
         except Exception as e:
             #
@@ -284,10 +296,14 @@ def start_bottle(port_threads):
             args['description'] = '-'
             log_inbound(**args)
             #
-            if isinstance(data, bool):
-                return HTTPResponse(status=status)
-            else:
-                return HTTPResponse(body=data, status=status)
+            response = HTTPResponse()
+            response.status = status
+            enable_cors(response)
+            #
+            if not isinstance(data, bool):
+                response.body = data
+            #
+            return response
             #
         except Exception as e:
             #
