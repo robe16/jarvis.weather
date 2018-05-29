@@ -1,7 +1,7 @@
 import requests
 import datetime
 
-from common_functions.time_functions import convertISOdateResponse, check_is_bst
+from common_functions.time_functions import convertISOdateResponse
 from log.log import log_outbound, log_internal
 from resources.global_resources.log_vars import logPass, logFail, logException
 from resources.lang.enGB.logs import *
@@ -27,9 +27,10 @@ class SunsetSunrise():
             sunrise = convertISOdateResponse(jsonResponse['results']['sunrise'])
             sunset = convertISOdateResponse(jsonResponse['results']['sunset'])
             #
-            if check_is_bst():
-                sunrise += datetime.timedelta(hours=1)
-                sunset += datetime.timedelta(hours=1)
+            # Following code commented as updates to Jenkinsfile should now start container with local timezone
+            # if check_is_bst():
+            #     sunrise += datetime.timedelta(hours=1)
+            #     sunset += datetime.timedelta(hours=1)
             #
             jsonSunRiseSet = {'sunrise': sunrise.isoformat(' '),
                               'sunset': sunset.isoformat(' ')}
