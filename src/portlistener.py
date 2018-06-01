@@ -131,14 +131,11 @@ def start_bottle(port_threads):
                 status = httpStatusSuccess
                 args['result'] = logPass
             #
-            day = 0
-            while day < len(data['days']):
+            for day_key in data['days'].keys():
                 #
-                data['days'][day]['sunRiseSet'] = _sunrisesunset.get_sunrise_sunset(data['location']['latitude'],
-                                                                                    data['location']['longitude'],
-                                                                                    data['days'][day]['date'])
-                #
-                day += 1
+                data['days'][day_key]['sunRiseSet'] = _sunrisesunset.get_sunrise_sunset(data['location']['latitude'],
+                                                                                        data['location']['longitude'],
+                                                                                        data['days'][day_key]['date'])
                 #
             #
             args['http_response_code'] = status

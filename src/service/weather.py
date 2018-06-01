@@ -67,14 +67,12 @@ class Weather():
                         'location': location_json,
                         'days': {}}
         #
-        dy_count = 0
-        #
         for day_period in forecast_daily['SiteRep']['DV']['Location']['Period']:
             #
             date_json = {}
             #
             # date held in format '2012-11-21Z'
-            dy_key = datetime.datetime.strptime(day_period['value'].replace('Z', ''), "%Y-%m-%d")
+            dy_date = datetime.datetime.strptime(day_period['value'].replace('Z', ''), "%Y-%m-%d")
             dy_date_str = day_period['value'].replace('Z', '')
             #
             day_json = {}
@@ -145,7 +143,7 @@ class Weather():
             date_json['nighttime'] = night_json
             date_json['3hourly'] = hourly_json
             #
-            jsonForecast['days'][dy_key] = date_json
+            jsonForecast['days'][dy_date_str] = date_json
         #
         return jsonForecast
 
