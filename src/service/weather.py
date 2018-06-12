@@ -109,34 +109,37 @@ class Weather():
                     #
             hourly_json = {}
             #
-            for hour_period in forecast_3hourly['SiteRep']['DV']['Location']['Period']:
-                #
-                hour_date = datetime.datetime.strptime(hour_period['value'].replace('Z', ''), "%Y-%m-%d")
-                hr_date_str = hour_period['value'].replace('Z', '')
-                #
-                if hr_date_str == dy_date_str:
+            try:
+                for hour_period in forecast_3hourly['SiteRep']['DV']['Location']['Period']:
                     #
-                    hourly_json = {}
+                    hour_date = datetime.datetime.strptime(hour_period['value'].replace('Z', ''), "%Y-%m-%d")
+                    hr_date_str = hour_period['value'].replace('Z', '')
                     #
-                    for rep in hour_period['Rep']:
+                    if hr_date_str == dy_date_str:
                         #
-                        hr_key = convertMinsToTime(hour_date, int(rep['$'])).strftime('%H:%M')
+                        hourly_json = {}
                         #
-                        hr_json_item = {}
-                        hr_json_item['time'] = convertMinsToTime(hour_date, int(rep['$'])).strftime('%H:%M')
-                        hr_json_item['weather_type'] = str(rep['W'])
-                        hr_json_item['wind_direction'] = rep['D']
-                        hr_json_item['wind_speed'] = rep['S']
-                        hr_json_item['visibility'] = getVisibility_desc(rep['V'])
-                        hr_json_item['temp'] = rep['T']
-                        hr_json_item['temp_feels'] = rep['F']
-                        hr_json_item['wind_gust'] = rep['G']
-                        hr_json_item['humidity'] = rep['H']
-                        hr_json_item['precipitation_prob'] = rep['Pp']
-                        hr_json_item['uv_index'] = getUV_desc(int(rep['U']))
-                        #
-                        hourly_json[hr_key] = hr_json_item
-                        #
+                        for rep in hour_period['Rep']:
+                            #
+                            hr_key = convertMinsToTime(hour_date, int(rep['$'])).strftime('%H:%M')
+                            #
+                            hr_json_item = {}
+                            hr_json_item['time'] = convertMinsToTime(hour_date, int(rep['$'])).strftime('%H:%M')
+                            hr_json_item['weather_type'] = str(rep['W'])
+                            hr_json_item['wind_direction'] = rep['D']
+                            hr_json_item['wind_speed'] = rep['S']
+                            hr_json_item['visibility'] = getVisibility_desc(rep['V'])
+                            hr_json_item['temp'] = rep['T']
+                            hr_json_item['temp_feels'] = rep['F']
+                            hr_json_item['wind_gust'] = rep['G']
+                            hr_json_item['humidity'] = rep['H']
+                            hr_json_item['precipitation_prob'] = rep['Pp']
+                            hr_json_item['uv_index'] = getUV_desc(int(rep['U']))
+                            #
+                            hourly_json[hr_key] = hr_json_item
+                            #
+            except:
+                pass
             #
             date_json['date'] = dy_date_str
             date_json['daytime'] = day_json
