@@ -10,11 +10,11 @@ from resources.lang.enGB.logs import *
 from service.weather import Weather
 from service.sunrise_sunset import SunsetSunrise
 
-from apis.uri_config import get_config
-from apis.uri_get_all import get_all
-from apis.uri_get_location import get_location
-from apis.uri_get_forecast import get_forecast
-from apis.uri_get_sunrisesunset import get_sunrisesunset
+from apis.get_config import get_config
+from apis.get_all import get_all
+from apis.get_location import get_location
+from apis.get_forecast import get_forecast
+from apis.get_sunrisesunset import get_sunrisesunset
 
 
 def start_bottle(port_threads):
