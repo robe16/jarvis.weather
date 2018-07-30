@@ -35,7 +35,7 @@ def start_bottle():
     @route('/weather/location', method=['OPTIONS'])
     @route('/weather/forecast/<option>', method=['OPTIONS'])
     @route('/weather/sunrise-sunset/<date>', method=['OPTIONS'])
-    def api_cors_options():
+    def api_cors_options(**kwargs):
         return response_options()
 
     @get('/config')
