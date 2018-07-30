@@ -1,7 +1,7 @@
-from bottle import get
-from bottle import request, run
+from bottle import request, run, route, get
 
 from config.config import get_cfg_port
+from common_functions.request_enable_cors import response_options
 from log.log import log_internal
 from resources.global_resources.log_vars import logPass
 from resources.lang.enGB.logs import *
@@ -29,6 +29,14 @@ def start_bottle():
     ################################################################################################
     # APIs
     ################################################################################################
+
+    @route('/config', method=['OPTIONS'])
+    @route('/weather/all', method=['OPTIONS'])
+    @route('/weather/location', method=['OPTIONS'])
+    @route('/weather/forecast/<option>', method=['OPTIONS'])
+    @route('/weather/sunrise-sunset/<date>', method=['OPTIONS'])
+    def api_cors_options():
+        return response_options()
 
     @get('/config')
     def api_get_config():
