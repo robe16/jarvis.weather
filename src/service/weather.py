@@ -67,7 +67,17 @@ class Weather():
                         'location': location_json,
                         'days': {}}
         #
-        for day_period in forecast_daily['SiteRep']['DV']['Location']['Period']:
+        try:
+            forecast_days = forecast_daily['SiteRep']['DV']['Location']['Period']
+        except:
+            forecast_days = []
+        #
+        try:
+            forecast_3hourlys = forecast_3hourly['SiteRep']['DV']['Location']['Period']
+        except:
+            forecast_3hourlys = []
+        #
+        for day_period in forecast_days:
             #
             date_json = {}
             #
@@ -110,7 +120,7 @@ class Weather():
             hourly_json = {}
             #
             try:
-                for hour_period in forecast_3hourly['SiteRep']['DV']['Location']['Period']:
+                for hour_period in forecast_3hourlys:
                     #
                     hour_date = datetime.datetime.strptime(hour_period['value'].replace('Z', ''), "%Y-%m-%d")
                     hr_date_str = hour_period['value'].replace('Z', '')
